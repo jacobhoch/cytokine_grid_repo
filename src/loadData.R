@@ -30,7 +30,7 @@ prepEnv()
 parser <- ArgumentParser(description="file i/o for oading counts data")
 parser$add_argument('-i', '--input_file', type='character', nargs='+', help='input counts data')
 parser$add_argument('-m', '--metadata', type='character', nargs='+', help='sample metadata') 
-parser$add_argument('-s', '--stem', type='character', nargs='+', help='file stem for saving')
+parser$add_argument('-s', '--stem', type='character', nargs=1, help='file stem for saving')
 parser$add_argument('-d', '--design', type='character', nargs='+', help='design variables to combine, seperated by spaces')
 
 args        <- parser$parse_args()

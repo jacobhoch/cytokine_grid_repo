@@ -20,9 +20,9 @@ data/raw_dds/$(GRID2_STEM).Rds: src/loadData.R data/raw_counts/$(GRID2_STEM)/*.r
 raw := $(foreach n, $(ALL_STEMS), $(addprefix data/raw_dds/, $(addprefix $n, .Rds)))
 raw_dds: $(raw)
 
-### RUN QC
-data/clean_dds/%.Rds: src/runQC.R data/raw_dds/%.Rds
-	Rscript src/runQC.R -i $(word 2, $^)
+### RUN QC + DESEQ
+data/clean_dds/%.Rds: src/runQC_DESeq.R data/raw_dds/%.Rds
+	Rscript src/runQC_DESeq.R -i $(word 2, $^)
 
 clean := $(foreach n, $(ALL_STEMS), $(addprefix data/clean_dds/, $(addprefix $n, .Rds)))
 clean_dds: $(clean)

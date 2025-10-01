@@ -14,14 +14,21 @@ prepEnv()
 
 parser <- ArgumentParser()
 parser$add_argument('-i', '--input_file', type='character', nargs=1, help='DESeq2 dataset object')
-parser$add_argument('-d', '--drop-replicates', type='character', nargs='+', default='none',
+parser$add_argument('-r', '--replicates-drop', type='character', nargs='+', default='none',
                     help='names of replicates to drop')
+parser$add_argument('-d', '--design', type='character', nargs='+', default='none',
+                    help='DESeq design, default is design of raw dds object')
 
-args   <- parser$parse_args()
-file   <- args$i
-drop   <- args$d
+args        <- parser$parse_args()
+file        <- args$i
+drop        <- args$r
+alt_design  <- args$d
+stem <- sub("\\..*", "",sub(".*/","",file))
 
 dds <- readRDS(file)
+
+# collapsing replicates
+dds <- collapseReplicates(dds, groupby=dds$Condition, run=dds$Unique)
 
 fig_stem <- './fig/QC/'
 fig_name <- basename(file_path_sans_ext(file))
@@ -35,7 +42,12 @@ cpm <- assay(dds) / (colSums(assay(dds)) / 1e6)
 # require gene counts to be > 3
 cpm_data_threshold = rowSums(cpm > count_threshold, na.rm=T) >= sample_threshold
 
-dds_filt <- dds[cpm_data_threshold, ]
+min_size <- getMinSizes()[stem]
+size_threshold = colSums(counts(dds)) > min_size
+
+dds_filt <- dds[cpm_data_threshold, size_threshold]
+print(paste0("removed: ", colnames(dds)[!size_threshold]))
+
 if (length(drop) > 1 & !('none' %in% drop)) {
   dds_filt <- dds_filt[, !colnames(dds_filt) %in% drop]
 }
@@ -43,4 +55,16 @@ if (length(drop) > 1 & !('none' %in% drop)) {
 assays(dds_filt)[['vsd']] <- vst(dds_filt, fitType = "local")
 
 plotQC(dds_filt, glue('{fig_stem}{fig_name}_post'))
-saveRDS(dds_filt, file=glue('./data/clean_dds/{fig_name}.Rds'))
+
+# if alternate design, save different dds object
+if (length(alt_design) > 1 & !('none' %in% alt_design)) {
+  
+  design(dds_filt) <-  as.formula(paste0("~",paste(alt_design, collapse="+")))
+  design_ext <- gsub("[^[:alnum:]]", "", design(dds_filt))[2]
+  
+} else {
+  design_ext <- ""
+}
+
+dds_filt <- DESeq(dds_filt, fitType = "local")
+saveRDS(dds_filt, file=glue('./data/clean_dds/{fig_name}{design_ext}.Rds'))

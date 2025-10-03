@@ -3,7 +3,7 @@ prepEnv <- function() {
                  "biovizBase", "DESeq2", "edgeR", "limma", "tidyverse", "dplyr",
                  "apeglm","org.Hs.eg.db", "DOSE", "AnnotationHub", "ensembldb",
                  "biomaRt", "zeallot", "ggforce","RColorBrewer","ComplexHeatmap",
-                 "glue","tools","argparse", "RNAseqQC")
+                 "glue","tools","argparse", "RNAseqQC", "EnhancedVolcano")
   
   invisible(lapply(libraries, function(pkg) {
     suppressPackageStartupMessages(library(pkg, character.only = TRUE))
@@ -17,4 +17,16 @@ getCytoColors <- function() {
 
 getMinSizes <- function() {
   min_sizes <- list("241120_primeseq" = 250000, "240722_primeseq" = 100000)
+}
+
+getMainRef <- function() {
+  main_refs <- list("241120_primeseq" = c("Stim","none_none"),
+                    "240722_primeseq" = c("Stim","none:none"))
+}
+
+readtxt <- function(file) {
+  con <- file(file, open="r")
+  txt <- readLines(con)
+  close(con)
+  return(txt)
 }

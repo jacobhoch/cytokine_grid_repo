@@ -66,5 +66,4 @@ if (length(alt_design) > 1 & !('none' %in% alt_design)) {
   design_ext <- ""
 }
 
-dds_filt <- DESeq(dds_filt, fitType = "local")
 saveRDS(dds_filt, file=glue('./data/clean_dds/{fig_name}{design_ext}.Rds'))

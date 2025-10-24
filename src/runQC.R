@@ -52,6 +52,7 @@ if (length(drop) > 1 & !('none' %in% drop)) {
   dds_filt <- dds_filt[, !colnames(dds_filt) %in% drop]
 }
 
+dds_filt <- estimateSizeFactors(dds_filt)
 assays(dds_filt)[['vsd']] <- vst(dds_filt, fitType = "local")
 
 plotQC(dds_filt, glue('{fig_stem}{fig_name}_post'))
@@ -67,3 +68,4 @@ if (length(alt_design) > 1 & !('none' %in% alt_design)) {
 }
 
 saveRDS(dds_filt, file=glue('./data/clean_dds/{fig_name}{design_ext}.Rds'))
+write.csv(counts(dds_filt, normalized=TRUE), file=glue('./data/normalized_counts/{fig_name}.csv'))

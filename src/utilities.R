@@ -34,3 +34,7 @@ readtxt <- function(file) {
   close(con)
   return(txt)
 }
+
+getNormalizedCounts <- function(dds) {
+  counts <- counts(dds, normalized=TRUE)
+}

@@ -31,9 +31,15 @@ clean := $(foreach n, $(ALL_STEMS), $(addprefix data/clean_dds/, $(addprefix $n,
 clean_dds: $(clean)
 
 ### RUN DESEQ2 AND GENERATE DEG LISTS ###
-data/DE_results/%.Rds: src/runDE.R data/clean_dds/%.Rds data/comparisons/comparisons_%.txt
+data/DE_results/%_list.Rds: src/runDE.R data/clean_dds/%.Rds data/comparisons/comparisons_%.txt
 	Rscript $< -i $(word 2, $^) -c $(word 3, $^)
 
-DE := $(foreach n, $(ALL_STEMS), $(addprefix data/DE_results/, $(addprefix $n, .Rds)))
+DE := $(foreach n, $(ALL_STEMS), $(addprefix data/DE_results/, $(addprefix $n, _list.Rds)))
 DE_dds: $(DE)
 	date +"finish time = %F %T"
+
+### MISC ####
+# DEG grid
+
+fig/241120_primeseq_percentDEGgrid.png: src/generateDEGgrid.R data/DE_results/241120_primeseq/*_up.txt
+	Rscript $< -s "241120_primeseq"

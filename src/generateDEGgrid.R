@@ -1,9 +1,4 @@
-# as a lapply:
-# list of all stims
-# function that takes one condition: "A" to "B"
-# pulls DEGs A to B vs A to none
-# pulls DEGs none to B vs none to none
-# report percentage
+# generate grid of percent DEGs
 
 getPercentDEGs <- function(cyto_A, cyto_B, grid, filestem) {
   

@@ -40,6 +40,9 @@ DE_dds: $(DE)
 
 ### MISC ####
 # DEG grid
-
 fig/241120_primeseq_percentDEGgrid.png: src/generateDEGgrid.R data/DE_results/241120_primeseq/*_up.txt
 	Rscript $< -s "241120_primeseq"
+
+# truth tables
+fig/241120_primeseq_truthtable: src/DEGtruthtables.R data/DE_results/241120_primeseq/*_full.csv
+	Rscript $< -s "241120_primeseq" -a "IFNb" -b "IL4"

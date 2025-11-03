@@ -3,7 +3,7 @@ prepEnv <- function() {
                  "biovizBase", "DESeq2", "edgeR", "limma", "tidyverse", "dplyr",
                  "apeglm","org.Hs.eg.db", "DOSE", "AnnotationHub", "ensembldb",
                  "biomaRt", "zeallot", "ggforce","RColorBrewer","ComplexHeatmap",
-                 "glue","tools","argparse", "RNAseqQC", "EnhancedVolcano")
+                 "glue","tools","argparse", "RNAseqQC", "EnhancedVolcano", "gridExtra")
   
   invisible(lapply(libraries, function(pkg) {
     suppressPackageStartupMessages(library(pkg, character.only = TRUE))
@@ -20,7 +20,7 @@ getCytokines <- function() {
 }
 
 getMinSizes <- function() {
-  min_sizes <- list("241120_primeseq" = 250000, "240722_primeseq" = 100000)
+  min_sizes <- list("241120_primeseq" = 250000, "240722_primeseq" = 150000)
 }
 
 getMainRef <- function() {

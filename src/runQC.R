@@ -48,8 +48,12 @@ size_threshold = colSums(counts(dds)) > min_size
 dds_filt <- dds[cpm_data_threshold, size_threshold]
 print(paste0("removed: ", colnames(dds)[!size_threshold]))
 
-if (length(drop) > 1 & !('none' %in% drop)) {
-  dds_filt <- dds_filt[, !colnames(dds_filt) %in% drop]
+if (drop != "none") {
+  drop_conditions <- readtxt(drop)
+  dds_filt <- dds_filt[, !colnames(dds_filt) %in% drop_conditions]
+  
+  # fix design
+  colData(dds_filt) <- droplevels(colData(dds_filt))
 }
 
 dds_filt <- estimateSizeFactors(dds_filt)

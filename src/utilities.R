@@ -3,7 +3,8 @@ prepEnv <- function() {
                  "biovizBase", "DESeq2", "edgeR", "limma", "tidyverse", "dplyr",
                  "apeglm","org.Hs.eg.db", "DOSE", "AnnotationHub", "ensembldb",
                  "biomaRt", "zeallot", "ggforce","RColorBrewer","ComplexHeatmap",
-                 "glue","tools","argparse", "RNAseqQC", "EnhancedVolcano", "gridExtra")
+                 "glue","tools","argparse", "RNAseqQC", "EnhancedVolcano",
+                 "gridExtra","UpSetR")
   
   invisible(lapply(libraries, function(pkg) {
     suppressPackageStartupMessages(library(pkg, character.only = TRUE))

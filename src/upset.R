@@ -64,4 +64,39 @@ EnhancedVolcano(naive_gene_info, lab=NA, x='log2FoldChange', y='padj',
                 max.overlaps=20, drawConnectors=TRUE, arrowheads=FALSE,
                 colCustom = color_mapping, pCutoff = 0.05)
 
+### TGFB HEATMAP ---------------------------------------------------------------
+dds_list <- readRDS(glue("~/data/DE_results/{filestem}_list.Rds"))
+vsd <- assays(dds_list[[1]])[['vsd']]
+assay(vsd) <- limma::removeBatchEffect(assay(vsd), vsd$Donor)
+vsd <- assay(vsd)
+
+gene_list <- universal_CDGs
+
+sample_list <- colnames(vsd)[grepl(glue("_{cyto}"),colnames(vsd)) |
+                               grepl("none_none", colnames(vsd))]
+
+plot_vsd <- vsd[rownames(vsd) %in% gene_list,
+                grepl(paste(sample_list, collapse="|"), colnames(vsd))]
+
+z <- t(scale(t(plot_vsd)))
+stim_label <- data.frame(substr(colnames(z),3,nchar(colnames(z))),
+                         row.names=colnames(z))
+stim_label[,1] <- sub("_"," to ",stim_label[,1])
+stim_label[,1] <- factor(stim_label[,1], levels=c("none to none",
+                                                  glue("none to {cyto_B}"),
+                                                  glue("{cyto_A} to {cyto_B}"),
+                                                  glue("{cyto_A} to none")))
+
+#png(filename = glue("~/fig/{filestem}/heatmap_{cyto_A}_to_{cyto_B}_CDGs.png"))
+ht <- Heatmap(z, column_split = stim_label,
+              show_column_names = T,
+              column_title_side = "bottom", column_title_rot = 20,
+              row_names_gp = gpar(fontsize=min(500/dim(z)[1],9)),
+              heatmap_legend_param = list(title="z score",
+                                          title_gp=gpar(fontsize=12),
+                                          labels_gp=gpar(fontsize=10),
+                                          legend_height=unit(1.5,'in'),
+                                          legend_width=unit(0.5,'in')))
+draw(ht)
+#dev.off()
 

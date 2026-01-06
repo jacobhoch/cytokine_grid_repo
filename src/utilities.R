@@ -21,12 +21,13 @@ getCytokines <- function() {
 }
 
 getMinSizes <- function() {
-  min_sizes <- list("241120_primeseq" = 250000, "240722_primeseq" = 150000)
+  min_sizes <- list("241120_primeseq" = 250000, "240722_primeseq" = 150000, "250201_TBinfection" = 500000)
 }
 
 getMainRef <- function() {
   main_refs <- list("241120_primeseq" = c("Stim","none_none"),
-                    "240722_primeseq" = c("Stim","none.none"))
+                    "240722_primeseq" = c("Stim","none.none"),
+                    "250201_TBinfection" = c("Stim","none_none"))
 }
 
 readtxt <- function(file) {

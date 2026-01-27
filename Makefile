@@ -43,9 +43,9 @@ clean_dds: $(clean)
 data/DE_results/%_list.Rds: src/runDE.R data/clean_dds/%.Rds data/comparisons/comparisons_%.txt
 	Rscript $< -i $(word 2, $^) -c $(word 3, $^)
 
-grid1_de := $(foreach n, $(shell cat data/comparisons/comparisons_$(GRID1_STEM).txt), $(addprefix data/DE_results/$(GRID1_STEM)_, $(addsuffix _full.csv, $n)))
-grid2_de := $(foreach n, $(shell cat data/comparisons/comparisons_$(GRID2_STEM).txt), $(addprefix data/DE_results/$(GRID2_STEM)_, $(addsuffix _full.csv, $n)))
-tb_de := $(foreach n, $(shell cat data/comparisons/comparisons_$(TB_STEM).txt), $(addprefix data/DE_results/$(TB_STEM)_, $(addsuffix _full.csv, $n)))
+grid1_de := $(foreach n, $(shell cat data/comparisons/comparisons_$(GRID1_STEM).txt), $(addprefix data/DE_results/$(GRID1_STEM)/, $(addsuffix _full.csv, $n)))
+grid2_de := $(foreach n, $(shell cat data/comparisons/comparisons_$(GRID2_STEM).txt), $(addprefix data/DE_results/$(GRID2_STEM)/, $(addsuffix _full.csv, $n)))
+tb_de := $(foreach n, $(shell cat data/comparisons/comparisons_$(TB_STEM).txt), $(addprefix data/DE_results/$(TB_STEM)/, $(addsuffix _full.csv, $n)))
 DE_tables: $(grid1_de) $(grid2_de) $(tb_de)
 
 DE := $(foreach n, $(ALL_STEMS), $(addprefix data/DE_results/, $(addprefix $n, _list.Rds)))
@@ -58,19 +58,18 @@ fig/cytokine_grid/correlation_heatmap.pdf: src/grid_correlation.R data/DE_result
 fig/cytokine_grid/grid_PCA.pdf: src/grid_PCA.R data/DE_results/$(GRID1_STEM)_list.Rds
 	Rscript $< -d $(word 2, $^)
 
+fig/cytokine_grid/indep_DEG_grid.pdf: src/generateDEGgrid.R $(grid1_de)
+	Rscript $< -s $(GRID1_STEM)
+
 fig1: fig/cytokine_grid/correlation_heatmap.pdf fig/cytokine_grid/grid_PCA.pdf
 
+fig2: fig/cytokine_grid/indep_DEG_grid.pdf
+
+
+fig: fig1 fig2
+
+
 ### MISC ####
-# PCA
-fig/%_PCA.png: src/PCA.R data/DE_results/%_list.Rds
-	Rscript $< -i $(word 2, $^)
-
-PCA := $(foreach n, $(ALL_STEMS), $(addprefix fig/, $(addprefix $n, _PCA.png)))
-PCA_plot: $(PCA)
-
-# DEG grid
-fig/241120_primeseq_percentDEGgrid.png: src/generateDEGgrid.R data/DE_results/241120_primeseq/*_up.txt
-	Rscript $< -s "241120_primeseq"
 
 # truth tables
 fig/241120_primeseq_truthtable: src/DEGtruthtables.R data/DE_results/241120_primeseq/*_full.csv

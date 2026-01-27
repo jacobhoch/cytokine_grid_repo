@@ -16,6 +16,11 @@ getCytoColors <- function() {
                    "IL4"="#929000","none"="#CCCCCC","TGFb"="#941100")
 }
 
+getInfColors <- function() {
+  colors <- c("none"="#CCCCCC","IFNb"="#CD87F8","IL4"="#929000","WT"="#b8d455",
+              "EccCa1.Tn"="#31AFF5")
+}
+
 getCytokines <- function() {
   cytokines <- c("IFNb","IFNg","IL10","IL1b","IL4","TGFb")
 }

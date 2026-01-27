@@ -43,9 +43,22 @@ clean_dds: $(clean)
 data/DE_results/%_list.Rds: src/runDE.R data/clean_dds/%.Rds data/comparisons/comparisons_%.txt
 	Rscript $< -i $(word 2, $^) -c $(word 3, $^)
 
+grid1_de := $(foreach n, $(shell cat data/comparisons/comparisons_$(GRID1_STEM).txt), $(addprefix data/DE_results/$(GRID1_STEM)_, $(addsuffix _full.csv, $n)))
+grid2_de := $(foreach n, $(shell cat data/comparisons/comparisons_$(GRID2_STEM).txt), $(addprefix data/DE_results/$(GRID2_STEM)_, $(addsuffix _full.csv, $n)))
+tb_de := $(foreach n, $(shell cat data/comparisons/comparisons_$(TB_STEM).txt), $(addprefix data/DE_results/$(TB_STEM)_, $(addsuffix _full.csv, $n)))
+DE_tables: $(grid1_de) $(grid2_de) $(tb_de)
+
 DE := $(foreach n, $(ALL_STEMS), $(addprefix data/DE_results/, $(addprefix $n, _list.Rds)))
 DE_dds: $(DE)
-	date +"finish time = %F %T"
+
+### FIGURES 1 & 2 CYTO GRID ###
+fig/cytokine_grid/correlation_heatmap.pdf: src/grid_correlation.R data/DE_results/$(GRID1_STEM)_list.Rds
+	Rscript $< -d $(word 2, $^)
+
+fig/cytokine_grid/grid_PCA.pdf: src/grid_PCA.R data/DE_results/$(GRID1_STEM)_list.Rds
+	Rscript $< -d $(word 2, $^)
+
+fig1: fig/cytokine_grid/correlation_heatmap.pdf fig/cytokine_grid/grid_PCA.pdf
 
 ### MISC ####
 # PCA

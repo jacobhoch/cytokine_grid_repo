@@ -4,20 +4,18 @@ prepEnv()
 parser <- ArgumentParser(description="file i/o for oading counts data")
 parser$add_argument('-d', '--dds_list', type='character', nargs=1, help='list of DESeq objects')
 parser$add_argument('-c', '--components', type='character', nargs='*', default='1,2', help='')
-parser$add_argument('-f', '--filestem', type='character', nargs=1, help='')
 
 args        <- parser$parse_args()
-dds_list    <- args$d
-components  <- args$c
-filestem    <- args$f
+file        <- args$d
 
 cytokines <- getCytokines()
 cyto_colors <- getCytoColors()
 
 set.seed(123)
+dds_list <- readRDS(file)
 dds <- dds_list[[1]]
 
-# borrowed from DESeq source code, but I want to save intermediates
+# saving intermediates from DESeq PCA
 vsd <- vst(dds, blind=FALSE, fitType = 'local')
 assay(vsd) <- limma::removeBatchEffect(assay(vsd), vsd$Donor)
 
@@ -25,6 +23,7 @@ rv <- rowVars(assay(vsd)) # calculate the variance for each gene
 select <- order(rv, decreasing=TRUE)[seq_len(min(500, length(rv)))]
 pca <- prcomp(t(assay(vsd)[select,]))
 percentVar <- pca$sdev^2 / sum( pca$sdev^2 )
+
 # add the intgroup factors together to create a new grouping factor
 intgroup <- c("Stim","day_1","day_2","Donor","tech_rep")
 intgroup <- c("Donor")
@@ -35,7 +34,7 @@ group <- if (length(intgroup) > 1) {
   colData(vsd)[[intgroup]]
 }
 
-# assembly the data for the plot
+# assemble the data for the plot
 #barplot(percentVar[1:10], xlab="component", ylab="percent variance")
 pcsToUse <- 1:3
 pcs <- paste0("PC", pcsToUse)
@@ -54,7 +53,7 @@ rownames(pca_metadata) <- colnames(vsd)
 pcaData <- merge(pcaData, pca_metadata, by.x = "name", by.y = "row.names")
 
 cols <- c()
-for (i in cytokines) {
+for (i in c("none",cytokines)) {
   pcaData[[i]] <- with(pcaData, ifelse(day_2 == i, 1, 0))
   cols <- c(cols,i)
 }
@@ -62,15 +61,16 @@ for (i in cytokines) {
 pcaData <- pivot_longer(pcaData,cols=all_of(cols),
                         names_to="colorby",values_to='amount')
 
-png(filename = glue(".fig/{filestem}_PCA.png"))
+pdf(file = glue("./fig/cytokine_grid/grid_PCA.pdf"),
+    width = 10, height = 5)
 ggplot(pcaData) +
-  geom_arc_bar(aes(x0=PC1,y0=PC2,r0=0.3,r=1,amount=amount,
+  geom_arc_bar(aes(x0=PC1,y0=PC3,r0=0.3,r=1,amount=amount,
                    fill=colorby,col=colorby), stat='pie', linewidth=0) +
   coord_equal() +
   theme_classic() +
   scale_fill_manual(name='cytokine 2',values=cyto_colors) +
-  geom_point(aes(x=PC1,y=PC2,color=day_1), size=4.5) +
-  scale_color_manual(name='cytokine 1',values=colors) +
+  geom_point(aes(x=PC1,y=PC3,color=day_1), size=4) +
+  scale_color_manual(name='cytokine 1',values=cyto_colors) +
   guides(color = guide_legend(override.aes = list(size = 5))) +
   guides(fill = guide_legend(override.aes = list(linetype = rep(1,7)))) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +

@@ -62,7 +62,7 @@ pcaData <- pivot_longer(pcaData,cols=all_of(cols),
                         names_to="colorby",values_to='amount')
 
 pdf(file = glue("./fig/cytokine_grid/grid_PCA.pdf"),
-    width = 10, height = 5)
+    width = 11, height = 5)
 ggplot(pcaData) +
   geom_arc_bar(aes(x0=PC1,y0=PC3,r0=0.3,r=1,amount=amount,
                    fill=colorby,col=colorby), stat='pie', linewidth=0) +
@@ -74,5 +74,6 @@ ggplot(pcaData) +
   guides(color = guide_legend(override.aes = list(size = 5))) +
   guides(fill = guide_legend(override.aes = list(linetype = rep(1,7)))) +
   xlab(paste0("PC1: ",percentVar[1],"% variance")) +
-  ylab(paste0("PC2: ",percentVar[2],"% variance"))
+  ylab(paste0("PC2: ",percentVar[2],"% variance")) +
+  theme(legend.position = "none")
 dev.off()

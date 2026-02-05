@@ -39,14 +39,18 @@ split <- factor(kclus$cluster,
 
 pdf(file=glue("./fig/cytokine_grid/correlation_heatmap.pdf"))
 ht <- Heatmap(sampleDistMatrix, show_column_names=F, row_gap=unit(1.5,'mm'),
-              column_gap=unit(0.1,'mm'), show_row_names=F, show_row_dend = F,
-              right_annotation = ha, col=colors, use_raster = F, row_split = split,
+              column_gap=unit(1.5,'mm'), show_row_names=F, show_row_dend = F,
+              row_title = NULL, column_title = NULL,
+              right_annotation = ha, col=colors, column_split = split, row_split = split,
               heatmap_legend_param = list(title = "Pearson correlation",
                                           labels_gp = gpar(fontsize=12),
                                           title_gp = gpar(fontsize=12, fontface='bold')),
               show_heatmap_legend=T, width=unit(11.5,'cm'), height=unit(11.5,'cm'),
               clustering_method_columns = "average",
-              clustering_method_rows = "average")
+              clustering_method_rows = "average",
+              layer_fun = function(j, i, x, y, width, height, fill, slice_r, slice_c) {
+                if(slice_r == 2 & slice_c == 2) {
+                grid.rect(gp = gpar(lwd = 3.5, fill = "transparent"))}})
 draw(ht)
 dev.off()
 

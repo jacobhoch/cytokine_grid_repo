@@ -61,9 +61,15 @@ fig/cytokine_grid/grid_PCA.pdf: src/grid_PCA.R data/DE_results/$(GRID1_STEM)_lis
 fig/cytokine_grid/indep_DEG_grid.pdf: src/generateDEGgrid.R $(grid1_de)
 	Rscript $< -s $(GRID1_STEM)
 
+fig/cytokine_grid/upset_IFNb_dep.pdf: src/upset.R $(grid1_de)
+	Rscript $< -s $(GRID1_STEM) -c IFNb
+
+fig/cytokine_grid/upset_IL4_dep.pdf: src/upset.R $(grid1_de)
+	Rscript $< -s $(GRID1_STEM) -c IL4
+
 fig1: fig/cytokine_grid/correlation_heatmap.pdf fig/cytokine_grid/grid_PCA.pdf
 
-fig2: fig/cytokine_grid/indep_DEG_grid.pdf
+fig2: fig/cytokine_grid/indep_DEG_grid.pdf fig/cytokine_grid/upset_IFNb_dep.pdf fig/cytokine_grid/upset_IL4_dep.pdf
 
 
 fig: fig1 fig2

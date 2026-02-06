@@ -52,16 +52,18 @@ for (i in 1:length(conditions)){
   
   grid[cyto_A,cyto_B] <- getPercentDEGs(cyto_A, cyto_B, grid, filestem)
 }
-diag(grid) <- NA
+diag(grid) <- 1
+colors <- colorRampPalette(brewer.pal(9, "PuBu"))(255)
 
 pdf(file=glue("./fig/cytokine_grid/indep_DEG_grid.pdf"),
     width = 7, height = 5)
-ht <- Heatmap(as.matrix(grid), 
+ht <- Heatmap(as.matrix(grid), col=colors, rect_gp = gpar(col = "black", lwd=1.5),
               cell_fun = function(j, i, x, y, width, height, fill) {
-                grid.text(sprintf("%.2f", grid[i, j]), x, y, gp = gpar(fontsize = 12))},
+                grid.text(sprintf("%.2f", grid[i, j]), x, y, gp = gpar(fontsize = 16, col="white", fontface = "bold"))},
               cluster_rows = FALSE, cluster_columns = FALSE, show_heatmap_legend = TRUE,
               row_title = "context (day 1)", column_title = "cytokine (day 2)",
               column_title_side = "bottom", width = unit(10, "cm"), height = unit(10, "cm"),
+              row_names_side = "left", na_col = "black",
               heatmap_legend_param = list(title="fraction of context\nindependent DEGs",
                                           title_gp=gpar(fontsize=12),
                                           labels_gp=gpar(fontsize=10),

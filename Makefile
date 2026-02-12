@@ -74,6 +74,12 @@ fig2: fig/cytokine_grid/indep_DEG_grid.pdf fig/cytokine_grid/upset_IFNb_dep.pdf 
 
 fig: fig1 fig2
 
+### SUPPLEMENTARY FIGURES ###
+
+fig/sfigs/heatmap_cluster_DEGs_by_cytokine.pdf: src/heatmap_clustering.R data/DE_results/$(GRID1_STEM)_list.Rds $(grid1_de)
+	Rscript $< -s $(GRID1_STEM)
+
+sfig1: fig/sfigs/heatmap_cluster_DEGs_by_cytokine.pdf
 
 ### MISC ####
 

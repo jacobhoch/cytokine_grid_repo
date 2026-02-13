@@ -9,6 +9,9 @@ prepEnv <- function() {
   invisible(lapply(libraries, function(pkg) {
     suppressPackageStartupMessages(library(pkg, character.only = TRUE))
   }))
+  
+  #complex heatmap options
+  ht_opt("merge_legends" = TRUE) 
 }
 
 getCytoColors <- function() {

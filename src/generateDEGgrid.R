@@ -64,7 +64,7 @@ ht <- Heatmap(as.matrix(grid), col=colors, rect_gp = gpar(col = "black", lwd=1.5
               row_title = "context (day 1)", column_title = "cytokine (day 2)",
               column_title_side = "bottom", width = unit(10, "cm"), height = unit(10, "cm"),
               row_names_side = "left", na_col = "black",
-              heatmap_legend_param = list(title="fraction of context\nindependent DEGs",
+              heatmap_legend_param = list(title="context dependence\nscore",
                                           title_gp=gpar(fontsize=12),
                                           labels_gp=gpar(fontsize=10),
                                           legend_height=unit(3,'cm'),

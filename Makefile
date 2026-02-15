@@ -79,10 +79,10 @@ fig: fig1 fig2 fig3
 
 ### SUPPLEMENTARY FIGURES ###
 
-fig/sfigs/heatmap_cluster_DEGs_by_cytokine.pdf: src/heatmap_clustering.R data/DE_results/$(GRID1_STEM)_list.Rds $(grid1_de)
+fig/sfigs/cluster_DEGs_by_cytokine.pdf: src/heatmap_clustering.R data/DE_results/$(GRID1_STEM)_list.Rds $(grid1_de)
 	Rscript $< -s $(GRID1_STEM)
 
-sfig1: fig/sfigs/heatmap_cluster_DEGs_by_cytokine.pdf
+sfig1: fig/sfigs/cluster_DEGs_by_cytokine.pdf
 
 ### MISC ####
 

@@ -66,15 +66,15 @@ my_colors <- c("#F4A261","#E76F51","#264653","#2A9D8F","#E9C46A")
 #my_colors <- c("#950d97","#e802db","#fd12ff","#ffbbff")
 
 pdf(file = glue("./fig/time_conc/IFNb_high_DEGs_clustering.pdf"),
-    width = 10, height = 4)
+    width = 7, height = 4)
 ggplot(PlotAllClusters,aes(variable,value,group=ID,col=Cluster)) +
   geom_point(position = "jitter", size=1,alpha=.5) +  # add jittered points with low opacity
   #geom_line(position = "jitter", alpha=.1) +
   stat_smooth(aes(group=Cluster), colour="black", 
               method="loess", se=F, size=1, formula = 'y~x') +
   ylab('z score') +
-  xlab('Time points') +
-  facet_grid(. ~ factor(Cluster, levels=c("1","4","2","3")), 
+  xlab('IFNb duration (hours)') +
+  facet_grid(. ~ factor(Cluster, levels=c("1","2","3","4")), 
              labeller = as_labeller(c("1" = "Cluster 1","2" = "Cluster 2",
                                       "3" = "Cluster 3","4" = "Cluster 4"))) +
   scale_color_manual(values = my_colors, 
@@ -83,7 +83,7 @@ ggplot(PlotAllClusters,aes(variable,value,group=ID,col=Cluster)) +
   theme_classic() +
   theme(axis.title = element_text(size = 14), 
         axis.text = element_text(size = 12), 
-        strip.text = element_text(size = 14))
+        strip.text = element_blank())
 dev.off()
 
 #cluster_summary <- data.frame(size = PlotCluster$Cluster)

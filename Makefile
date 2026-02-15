@@ -59,7 +59,7 @@ fig/cytokine_grid/grid_PCA.pdf: src/grid_PCA.R data/DE_results/$(GRID1_STEM)_lis
 	Rscript $< -d $(word 2, $^)
 
 fig/cytokine_grid/indep_DEG_grid.pdf: src/generateDEGgrid.R $(grid1_de)
-	Rscript $< -s $(GRID1_STEM)
+	Rscript $< -f $(GRID1_STEM)
 
 fig/cytokine_grid/heatmap_IL4_DEGs_wIFNb.pdf: src/IL4_DEGs_heatmap.R data/DE_results/$(GRID1_STEM)_list.Rds  $(grid1_de)
 	Rscript $< -f $(GRID1_STEM)
@@ -68,7 +68,14 @@ fig1: fig/cytokine_grid/correlation_heatmap.pdf fig/cytokine_grid/grid_PCA.pdf
 
 fig2: fig/cytokine_grid/indep_DEG_grid.pdf fig/cytokine_grid/heatmap_IL4_DEGs_wIFNb.pdf
 
-fig: fig1 fig2
+### FIGURE 3 TIME CONCENTRATION ###
+
+fig/time_conc/IFNb_high_DEGs_clustering.pdf: src/timecourse_clustering.R data/DE_results/$(GRID2_STEM)_list.Rds $(grid2_de)
+	Rscript $< -f $(GRID2_STEM)
+
+fig3: fig/time_conc/IFNb_high_DEGs_clustering.pdf
+
+fig: fig1 fig2 fig3
 
 ### SUPPLEMENTARY FIGURES ###
 

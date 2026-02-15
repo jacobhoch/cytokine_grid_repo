@@ -30,10 +30,10 @@ source("./src/utilities.R")
 prepEnv()
 
 parser <- ArgumentParser(description="file i/o for oading counts data")
-parser$add_argument('-s', '--stem', type='character', nargs=1, help='stem where DEG results live')
+parser$add_argument('-f', '--filestem', type='character', nargs=1, help='stem where DEG results live')
 
 args        <- parser$parse_args()
-filestem    <- args$s
+filestem    <- args$f
 
 cytokines <- getCytokines()
 

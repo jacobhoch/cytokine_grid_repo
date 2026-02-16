@@ -78,14 +78,28 @@ fig/time_conc/IL4_DEGs_IFNb_conds.pdf: src/timeconc_heatmap.R data/DE_results/$(
 
 fig3: fig/time_conc/IFNb_high_DEGs_clustering.pdf fig/time_conc/IL4_DEGs_IFNb_conds.pdf
 
-fig: fig1 fig2 fig3
+### FIGURE 5 TB INFECTION ###
+
+fig/TBinfection/IL4_DEGs_heatmap.pdf: src/TBinfection_DEGclustering.R data/DE_results/$(TB_STEM)_list.Rds $(tb_de)
+	Rscript $< -f $(TB_STEM)
+
+fig/TBinfection/IFNb_DEG_venn.pdf: src/venns.R $(tb_de)
+	Rscript $< -f $(TB_STEM) -u $(GRID1_STEM)
+
+fig5: fig/TBinfection/IL4_DEGs_heatmap.pdf fig/TBinfection/IFNb_DEG_venn.pdf
+
+
+fig: fig1 fig2 fig3 fig5
 
 ### SUPPLEMENTARY FIGURES ###
 
 fig/sfigs/cluster_DEGs_by_cytokine.pdf: src/heatmap_clustering.R data/DE_results/$(GRID1_STEM)_list.Rds $(grid1_de)
 	Rscript $< -s $(GRID1_STEM)
 
-sfig1: fig/sfigs/cluster_DEGs_by_cytokine.pdf
+fig/sfigs/IL4_DEG_venn.pdf: src/venns.R $(tb_de)
+	Rscript $< -f $(TB_STEM) -u $(GRID1_STEM)
+
+sfigs: fig/sfigs/cluster_DEGs_by_cytokine.pdf fig/sfigs/IL4_DEG_venn.pdf
 
 ### MISC ####
 

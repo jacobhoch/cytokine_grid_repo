@@ -4,7 +4,7 @@ prepEnv <- function() {
                  "apeglm","org.Hs.eg.db", "DOSE", "AnnotationHub", "ensembldb",
                  "biomaRt", "zeallot", "ggforce","RColorBrewer","ComplexHeatmap",
                  "glue","tools","argparse", "RNAseqQC", "EnhancedVolcano",
-                 "gridExtra","UpSetR","factoextra","reshape2")
+                 "gridExtra","UpSetR","factoextra","reshape2", "eulerr")
   
   invisible(lapply(libraries, function(pkg) {
     suppressPackageStartupMessages(library(pkg, character.only = TRUE))

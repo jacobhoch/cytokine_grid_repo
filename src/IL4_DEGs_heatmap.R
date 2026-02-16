@@ -15,7 +15,6 @@ set.seed(123)
 dds_list <- readRDS(file=glue("./data/DE_results/{filestem}_list.Rds"))
 dds <- dds_list[[1]]
 
-# saving intermediates from DESeq PCA
 vsd <- vst(dds, blind=FALSE, fitType = 'local')
 assay(vsd) <- limma::removeBatchEffect(assay(vsd), vsd$Donor)
 vsd <- assay(vsd)
@@ -45,3 +44,29 @@ ht <- Heatmap(z, top_annotation = ha, show_row_names = T, row_km = 3, row_title 
                                           legend_width=unit(0.5,'in')))
 ht <- draw(ht)
 dev.off()
+
+### LFC HEATMAP ----------------------------------------------------------------
+# condition_list <- c("none_IL4_vs_none_none","IFNb_none_vs_none_none",
+#                     "IFNb_IL4_vs_IFNb_none")
+# 
+# genes <- read.csv(file = glue("~/data/DE_results/{filestem}/{condition_list[1]}_full.csv"))$X
+# FCmatrix <- data.frame(matrix(ncol = 0, nrow = length(genes), 
+#                               dimnames = list(genes, NULL)))
+# for (i in condition_list) {
+#   
+#   full_csv <- read.csv(file = glue("~/data/DE_results/{filestem}/{i}_full.csv"))
+#   FCmatrix[[i]] <- full_csv$log2FoldChange
+# }
+# 
+# FCmatrix <- FCmatrix[rownames(FCmatrix) %in% IL4_DEGs, ]
+# 
+# ht <- Heatmap(FCmatrix, show_row_names = T, #column_split = stim_label
+#               show_column_names = T, row_km = 1, column_title_gp = gpar(fontsize=0),
+#               column_gap = unit(1, "mm"), row_gap = unit(1, "mm"), row_dend_side = "left",
+#               heatmap_legend_param = list(title="log 2 fold change",
+#                                           title_gp=gpar(fontsize=12),
+#                                           labels_gp=gpar(fontsize=10),
+#                                           legend_height=unit(1.5,'in'),
+#                                           legend_width=unit(0.5,'in')))
+# draw(ht)
+

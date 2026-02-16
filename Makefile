@@ -73,7 +73,10 @@ fig2: fig/cytokine_grid/indep_DEG_grid.pdf fig/cytokine_grid/heatmap_IL4_DEGs_wI
 fig/time_conc/IFNb_high_DEGs_clustering.pdf: src/timecourse_clustering.R data/DE_results/$(GRID2_STEM)_list.Rds $(grid2_de)
 	Rscript $< -f $(GRID2_STEM)
 
-fig3: fig/time_conc/IFNb_high_DEGs_clustering.pdf
+fig/time_conc/IL4_DEGs_IFNb_conds.pdf: src/timeconc_heatmap.R data/DE_results/$(GRID2_STEM)_list.Rds $(grid2_de)
+	Rscript $< -f $(GRID2_STEM)
+
+fig3: fig/time_conc/IFNb_high_DEGs_clustering.pdf fig/time_conc/IL4_DEGs_IFNb_conds.pdf
 
 fig: fig1 fig2 fig3
 

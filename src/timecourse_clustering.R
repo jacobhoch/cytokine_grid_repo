@@ -65,9 +65,7 @@ PlotAllClusters<-melt(PlotCluster,by='ID')
 my_colors <- c("#F4A261","#E76F51","#264653","#2A9D8F","#E9C46A") 
 #my_colors <- c("#950d97","#e802db","#fd12ff","#ffbbff")
 
-pdf(file = glue("./fig/time_conc/IFNb_high_DEGs_clustering.pdf"),
-    width = 7, height = 4)
-ggplot(PlotAllClusters,aes(variable,value,group=ID,col=Cluster)) +
+lineplot <- ggplot(PlotAllClusters,aes(variable,value,group=ID,col=Cluster)) +
   geom_point(position = "jitter", size=1,alpha=.5) +  # add jittered points with low opacity
   #geom_line(position = "jitter", alpha=.1) +
   stat_smooth(aes(group=Cluster), colour="black", 
@@ -84,15 +82,22 @@ ggplot(PlotAllClusters,aes(variable,value,group=ID,col=Cluster)) +
   theme(axis.title = element_text(size = 14), 
         axis.text = element_text(size = 12), 
         strip.text = element_blank())
+
+cluster_summary <- data.frame(size = PlotCluster$Cluster)
+cluster_summary$size <- factor(cluster_summary$size, levels=c(1, 2, 3, 4))
+
+bar_plot <- ggplot(cluster_summary, aes(y=size, fill=size)) +
+  geom_bar() +
+  scale_fill_manual(values = my_colors) +
+  xlab("number of genes") +
+  ylab("cluster") +
+  theme_classic() +
+  coord_flip() +
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 14),
+        legend.position = "none")
+
+pdf(file = glue("./fig/time_conc/IFNb_high_DEGs_clustering.pdf"),
+    width = 7, height = 5)
+lineplot / bar_plot
 dev.off()
-
-#cluster_summary <- data.frame(size = PlotCluster$Cluster)
-#cluster_summary$size <- factor(cluster_summary$size, levels=c(3, 2, 4, 1))
-
-# my_colors <- c("#264653","#E76F51","#2A9D8F","#F4A261") 
-# ggplot(cluster_summary, aes(y=size, fill=size)) +
-#   geom_bar() +
-#   scale_fill_manual(values = my_colors) +
-#   theme_classic() +
-#   theme(axis.text = element_text(size = 12),
-#         axis.title = element_text(size = 14))

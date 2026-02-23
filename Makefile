@@ -93,13 +93,16 @@ fig: fig1 fig2 fig3 fig5
 
 ### SUPPLEMENTARY FIGURES ###
 
-fig/sfigs/cluster_DEGs_by_cytokine.pdf: src/heatmap_clustering.R data/DE_results/$(GRID1_STEM)_list.Rds $(grid1_de)
+fig/sfigs/cluster_by_cytokine_DEGs.pdf: src/heatmap_clustering.R data/DE_results/$(GRID1_STEM)_list.Rds $(grid1_de)
 	Rscript $< -s $(GRID1_STEM)
 
-fig/sfigs/IL4_DEG_venn.pdf: src/venns.R $(tb_de)
-	Rscript $< -f $(TB_STEM) -u $(GRID1_STEM)
+fig/sfigs/IL4_DEG_venn.pdf: fig/TBinfection/IFNb_DEG_venn.pdf
+	@if test -f $@; then :; else\
+		rm -f $<; \
+		make $<; \
+	fi
 
-sfigs: fig/sfigs/cluster_DEGs_by_cytokine.pdf fig/sfigs/IL4_DEG_venn.pdf
+sfigs: fig/sfigs/cluster_by_cytokine_DEGs.pdf fig/sfigs/IL4_DEG_venn.pdf
 
 ### MISC ####
 
